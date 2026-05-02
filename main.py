@@ -7,6 +7,10 @@ from fastapi.responses import HTMLResponse
 from functions import (
     add_time_interval,
     avg_time_interval,
+    format_avg,
+    format_interval,
+    format_list,
+    format_time,
     last_7_days,
     last_24_hours,
     last_month,
@@ -21,18 +25,37 @@ avg = timedelta(0)
 
 @app.get("/", response_class=HTMLResponse)
 def home():
-    today_times = today(times, time_intervals)[0]
-    today_intervals = today(times, time_intervals)[1]
-    today_avg = today(times, time_intervals)[2]
-    last_24_times = last_24_hours(times, time_intervals)[0]
-    last_24_intervals = last_24_hours(times, time_intervals)[1]
-    last_24_avg = last_24_hours(times, time_intervals)[2]
-    last_7_times = last_7_days(times, time_intervals)[0]
-    last_7_intervals = last_7_days(times, time_intervals)[1]
-    last_7_avg = last_7_days(times, time_intervals)[2]
-    last_month_times = last_month(times, time_intervals)[0]
-    last_month_intervals = last_month(times, time_intervals)[1]
-    last_month_avg = last_month(times, time_intervals)[2]
+    today_times = format_list(
+        today(times.copy(), time_intervals.copy())[0], format_time
+    )
+    today_intervals = format_list(
+        today(times.copy(), time_intervals.copy())[1], format_avg
+    )
+    today_avg = format_avg(today(times.copy(), time_intervals.copy())[2])
+    last_24_times = format_list(
+        last_24_hours(times.copy(), time_intervals.copy())[0], format_time
+    )
+    last_24_intervals = format_list(
+        last_24_hours(times.copy(), time_intervals.copy())[1], format_avg
+    )
+    last_24_avg = format_avg(last_24_hours(times.copy(), time_intervals.copy())[2])
+    last_7_times = format_list(
+        last_7_days(times.copy(), time_intervals.copy())[0], format_time
+    )
+    last_7_intervals = format_list(
+        last_7_days(times.copy(), time_intervals.copy())[1], format_avg
+    )
+    last_7_avg = format_avg(last_7_days(times.copy(), time_intervals.copy())[2])
+    last_month_times = format_list(
+        last_month(times.copy(), time_intervals.copy())[0], format_time
+    )
+    last_month_intervals = format_list(
+        last_month(times.copy(), time_intervals.copy())[1], format_avg
+    )
+    last_month_avg = format_avg(last_month(times.copy(), time_intervals.copy())[2])
+    all_time_times = format_list(times.copy(), format_time)
+    all_time_intervals = format_list(time_intervals.copy(), format_avg)
+    all_time_avg = format_avg(avg_time_interval(time_intervals.copy()))
     return f"""
     <html>
         <head>
@@ -109,7 +132,7 @@ def home():
             <!-- TODAY -->
             <div class="section">
                 <h2>Today</h2>
-                <p class="stat">Total presses: {len(today_times)}</p>
+                <p class="stat">Total presses: {len(today(times.copy(), time_intervals.copy())[0])}</p>
                 <p class="stat">Average interval no overnight: {today_avg}</p>
 
                 <details>
@@ -130,7 +153,7 @@ def home():
             <!-- LAST 24 HOURS -->
             <div class="section">
                 <h2>Last 24 Hours</h2>
-                <p class="stat">Total presses: {len(last_24_times)}</p>
+                <p class="stat">Total presses: {len(last_24_hours(times.copy(), time_intervals.copy())[0])}</p>
                 <p class="stat">Average interval no overnight: {last_24_avg}</p>
 
                 <details>
@@ -151,7 +174,7 @@ def home():
             <!-- LAST 7 DAYS -->
             <div class="section">
                 <h2>Last 7 Days</h2>
-                <p class="stat">Total presses: {len(last_7_times)}</p>
+                <p class="stat">Total presses: {len(last_7_days(times.copy(), time_intervals.copy())[0])}</p>
                 <p class="stat">Average interval no overnight: {last_7_avg}</p>
 
                 <details>
@@ -172,7 +195,7 @@ def home():
             <!-- LAST 30 DAYS -->
             <div class="section">
                 <h2>Last 30 Days</h2>
-                <p class="stat">Total presses: {len(last_month_times)}</p>
+                <p class="stat">Total presses: {len(last_month(times.copy(), time_intervals.copy())[0])}</p>
                 <p class="stat">Average interval no overnight: {last_month_avg}</p>
 
                 <details>
@@ -194,19 +217,19 @@ def home():
             <div class="section">
                 <h2>All Time</h2>
                 <p class="stat">Total presses: {len(times)}</p>
-                <p class="stat">Average interval no overnight: {avg_time_interval(time_intervals)}</p>
+                <p class="stat">Average interval no overnight: {all_time_avg}</p>
 
                 <details>
                     <summary>Press Times</summary>
                     <ul>
-                        {times}
+                        {all_time_times}
                     </ul>
                 </details>
 
                 <details>
                     <summary>Intervals</summary>
                     <ul>
-                        {time_intervals}
+                        {all_time_intervals}
                     </ul>
                 </details>
             </div>

@@ -2,6 +2,13 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 
+def remove_latest_val(times, time_intervals):
+    if times:
+        times.pop()
+    if time_intervals:
+        time_intervals.pop()
+
+
 def add_time_interval(time, times, time_intervals):
     times.append(time)
     if len(times) >= 2:

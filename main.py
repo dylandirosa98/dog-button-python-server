@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 from functions import (
     add_time_interval,
@@ -14,6 +14,7 @@ from functions import (
     last_7_days,
     last_24_hours,
     last_month,
+    remove_latest_val,
     today,
 )
 
@@ -123,16 +124,41 @@ def home():
                 li {{
                     margin-bottom: 6px;
                 }}
+                button {{
+                    width: 100%;
+                    padding: 14px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    border: none;
+                    border-radius: 10px;
+                    background: #222;
+                    color: white;
+                    cursor: pointer;
+                }}
             </style>
         </head>
 
         <body>
-            <h1>Dog Button Dashboard</h1>
+            <h1>Nox's Bathroom Dashboard</h1>
+
+            <div class="section">
+                <h2>Controls</h2>
+
+                <form action="/times" method="post" style="margin-bottom: 10px;">
+                    <button type="submit">Add Press</button>
+                </form>
+
+                <form action="/remove-latest" method="post">
+                    <button type="submit">Remove Latest Press</button>
+                </form>
+            </div>
 
             <!-- TODAY -->
             <div class="section">
                 <h2>Today</h2>
-                <p class="stat">Total presses: {len(today(times.copy(), time_intervals.copy())[0])}</p>
+                <p class="stat">Total presses: {
+        len(today(times.copy(), time_intervals.copy())[0])
+    }</p>
                 <p class="stat">Average interval no overnight: {today_avg}</p>
 
                 <details>
@@ -153,7 +179,9 @@ def home():
             <!-- LAST 24 HOURS -->
             <div class="section">
                 <h2>Last 24 Hours</h2>
-                <p class="stat">Total presses: {len(last_24_hours(times.copy(), time_intervals.copy())[0])}</p>
+                <p class="stat">Total presses: {
+        len(last_24_hours(times.copy(), time_intervals.copy())[0])
+    }</p>
                 <p class="stat">Average interval no overnight: {last_24_avg}</p>
 
                 <details>
@@ -174,7 +202,9 @@ def home():
             <!-- LAST 7 DAYS -->
             <div class="section">
                 <h2>Last 7 Days</h2>
-                <p class="stat">Total presses: {len(last_7_days(times.copy(), time_intervals.copy())[0])}</p>
+                <p class="stat">Total presses: {
+        len(last_7_days(times.copy(), time_intervals.copy())[0])
+    }</p>
                 <p class="stat">Average interval no overnight: {last_7_avg}</p>
 
                 <details>
@@ -195,7 +225,9 @@ def home():
             <!-- LAST 30 DAYS -->
             <div class="section">
                 <h2>Last 30 Days</h2>
-                <p class="stat">Total presses: {len(last_month(times.copy(), time_intervals.copy())[0])}</p>
+                <p class="stat">Total presses: {
+        len(last_month(times.copy(), time_intervals.copy())[0])
+    }</p>
                 <p class="stat">Average interval no overnight: {last_month_avg}</p>
 
                 <details>
@@ -243,4 +275,10 @@ def home():
 def create_time():
     time = datetime.now(ZoneInfo("US/Eastern"))
     add_time_interval(time, times, time_intervals)
-    return {"status": "ok"}
+    return RedirectResponse("/", status_code=303)
+
+
+@app.post("/remove-latest")
+def remove_latest():
+    remove_latest_val(times, time_intervals)
+    return RedirectResponse("/", status_code=303)

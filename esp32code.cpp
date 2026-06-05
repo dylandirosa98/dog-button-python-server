@@ -4,8 +4,8 @@
 
 const int buttonPin = 27;
 
-const char* ssid = "MOTO4B50";
-const char* password = "w3pfp4wyy9";
+const char* ssid = "secret";
+const char* password = "secret";
 
 const char* ntfyUrl = "https://ntfy.sh/nox_bathroom";
 const char* serverUrl = "https://nox-button.duckdns.org/times";

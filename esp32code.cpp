@@ -4,11 +4,11 @@
 
 const int buttonPin = 27;
 
-const char* ssid = "secret";
-const char* password = "secret";
+const char* ssid = "MOTO4B50";
+const char* password = "w3pfp4wyy9";
 
 const char* ntfyUrl = "https://ntfy.sh/nox_bathroom";
-const char* serverUrl = "https://nox-button.duckdns.org/items";
+const char* serverUrl = "https://nox-button.duckdns.org/times";
 
 const unsigned long cooldown = 300000; // 5 minutes
 unsigned long lastPressTime = 0;
@@ -20,7 +20,7 @@ void setup() {
   Serial.begin(115200);
 
   pinMode(buttonPin, INPUT_PULLUP);
-
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -86,7 +86,7 @@ void sendToServer() {
     HTTPClient http;
     http.begin(client, serverUrl);
 
-    int responseCode = http.GET();
+    int responseCode = http.POST("");
 
     Serial.print("server response code: ");
     Serial.println(responseCode);

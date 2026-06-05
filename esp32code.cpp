@@ -8,7 +8,7 @@ const char* ssid = "secret";
 const char* password = "secret";
 
 const char* ntfyUrl = "https://ntfy.sh/nox_bathroom";
-const char* serverUrl = "https://nox-button.duckdns.org/times";
+const char* serverUrl = "http://nox-button.duckdns.org/times";
 
 const unsigned long cooldown = 300000; // 5 minutes
 unsigned long lastPressTime = 0;

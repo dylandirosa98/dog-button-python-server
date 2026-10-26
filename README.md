@@ -1,6 +1,6 @@
 # ESP32 Dog Button
 
-A physical button my dog presses when she needs to go out. An ESP32 running C++ firmware detects the press and sends a push notification to my phone. A small Python server logs each press and shows bathroom-break intervals over time.
+A physical button my dog Nox presses to ask to go out. An ESP32 running C++ firmware detects the press and sends a push notification to my phone. A small Python server logs each press and shows bathroom-break intervals over time.
 
 **Stack:** C++ (Arduino framework on ESP32) for the firmware, Python with FastAPI for the server, ntfy for notifications.
 
